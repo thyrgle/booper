@@ -142,6 +142,9 @@ let pad ?(h = 16) ?(v = 10) l = Layout.flat ~hmargin:h ~vmargin:v [ l ]
 let button ?(variant = Primary) ?(color = (Primary : role)) ?(small = false)
     ?radius t ~on_click text =
   T.apply t;
+  let radius =
+    match radius with Some r -> r | None -> max 4 (t.T.radius - 4)
+  in
   let p = t.T.palette in
   let fs = if small then t.T.font_size - 2 else t.T.font_size in
   let fg, bg, border, hover =
@@ -169,7 +172,7 @@ let button ?(variant = Primary) ?(color = (Primary : role)) ?(small = false)
     Widget.button ~kind:Button.Trigger ~label:lbl ~fg:(rgba fg)
       ~bg_on:bg ~bg_off:bg ~bg_over:(Some hover)
       ?border_radius:
-        (match variant with Ghost -> None | _ -> Some (match radius with Some r -> r | None -> t.T.radius))
+        (match variant with Ghost -> None | _ -> Some radius)
       ?border_color:(Option.map rgba border)
       ~action:(fun _ -> on_click ())
       ""
