@@ -1,0 +1,15 @@
+(executable
+ (name hello)
+ (libraries booper))
+
+(executable
+ (name controls)
+ (libraries booper))
+
+(executable
+ (name dashboard)
+ (libraries booper))
+
+(executable
+ (name screenshot)
+ (libraries booper tsdl tsdl-image threads.posix))

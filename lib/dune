@@ -1,0 +1,3 @@
+(library
+ (name booper)
+ (libraries bogue tsdl threads.posix))
