@@ -23,23 +23,32 @@ let ui =
   in
   volume_readout := Some (label theme ~color:Primary "40%");
 
-  column theme ~sep:16
+  let profile =
+    card theme
+      [
+        heading theme "Profile";
+        row theme ~sep:24 [ label theme "Name"; name.layout ];
+      ]
+  in
+  let preferences =
+    card theme
+      [
+        heading theme "Preferences";
+        notify.layout;
+        row theme ~sep:14 [ label theme "Dark mode"; dark_mode.layout ];
+        divider ~width:320 theme;
+        row theme ~sep:14
+          [ label theme "Volume"; volume.layout; Option.get !volume_readout ];
+      ]
+  in
+  Bogue.Layout.set_width profile (Bogue.Layout.width preferences);
+
+  column theme ~sep:18 ~align:Bogue.Draw.Center
     [
-      card theme
-        [
-          heading theme "Profile";
-          row theme ~sep:12 [ label theme "Name"; name.layout ];
-        ];
-      card theme
-        [
-          heading theme "Preferences";
-          notify.layout;
-          row theme ~sep:12 [ label theme "Dark mode"; dark_mode.layout ];
-          divider ~width:320 theme;
-          row theme ~sep:12
-            [ label theme "Volume"; volume.layout; Option.get !volume_readout ];
-        ];
-      row theme ~sep:12
+      profile;
+      spacer ~w:1 ~h:10 ();
+      preferences;
+      row theme ~sep:14
         [
           button theme ~on_click:(fun () ->
               Printf.printf "name=%s notify=%b dark=%b\n" (name.text ())

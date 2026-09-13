@@ -32,6 +32,11 @@ let transparent = (0, 0, 0, 0)
 
 let solid ?alpha c = Style.color_bg (rgba ?alpha c)
 
+let vgrad ?(top = 0.06) ?(bottom = 0.04) c =
+  Style.vgradient
+    [ rgba (Color.mix ~t:top c (255, 255, 255));
+      rgba (Color.mix ~t:bottom c (0, 0, 0)) ]
+
 let role_color t = function
   | Text -> t.T.palette.text
   | Muted -> t.T.palette.text_muted
@@ -79,9 +84,10 @@ let clamp_range lo hi v = max lo (min hi v)
 
 (* {2 Layout helpers} *)
 
-let row ?(sep = -1) ?(margins = 0) ?align ?background ?shadow t rooms =
+let row ?(sep = -1) ?(margins = 0) ?(align = Draw.Center) ?background ?shadow t
+    rooms =
   let sep = if sep < 0 then t.T.spacing else sep in
-  Layout.flat ~sep ~margins ?align ?background ?shadow rooms
+  Layout.flat ~sep ~margins ~align ?background ?shadow rooms
 
 let column ?(sep = -1) ?(margins = 0) ?align ?background ?shadow t rooms =
   let sep = if sep < 0 then t.T.spacing else sep in
@@ -118,18 +124,25 @@ let divider ?(width = 200) t =
 
 (* {2 Card} *)
 
-let card ?(padding = 18) ?(sep = 12) ?(shadow = true) ?(radius = 14)
+let card ?(padding = 22) ?(sep = 14) ?(shadow = true) ?(radius = 14)
     ?(background = None) ?(border = true) t rooms =
   let p = t.T.palette in
   let bgc = match background with Some c -> c | None -> p.surface in
+  let border_color =
+    if border then Some (Color.lighten ~amount:0.04 p.border) else None
+  in
   let style =
-    pill_background ~radius
-      ~border:(if border then `Color p.border else `None)
-      bgc
+    Style.create ~background:(vgrad ~top:0.03 ~bottom:0. bgc)
+      ?border:
+        (Option.map
+           (fun bc ->
+             Style.mk_border ~radius (Style.mk_line ~color:(rgba bc) ()))
+           border_color)
+      ()
   in
   let shadow =
     if shadow then
-      Some (Style.mk_shadow ~offset:(0, 5) ~size:18 ~radius:radius ~width:2 ())
+      Some (Style.mk_shadow ~offset:(0, 4) ~size:3 ~width:radius ~radius ())
     else None
   in
   Layout.tower ~sep ~margins:padding ~background:(Layout.style_bg style) ?shadow
@@ -137,7 +150,7 @@ let card ?(padding = 18) ?(sep = 12) ?(shadow = true) ?(radius = 14)
 
 (* {2 Button} *)
 
-let pad ?(h = 16) ?(v = 10) l = Layout.flat ~hmargin:h ~vmargin:v [ l ]
+let pad ?(h = 16) ?(v = 12) l = Layout.flat ~hmargin:h ~vmargin:v [ l ]
 
 let button ?(variant = Primary) ?(color = (Primary : role)) ?(small = false)
     ?radius t ~on_click text =
@@ -150,20 +163,23 @@ let button ?(variant = Primary) ?(color = (Primary : role)) ?(small = false)
   let fg, bg, border, hover =
     match variant with
     | Primary ->
-      ( p.on_primary, solid p.primary, None,
-        solid (Color.lighten ~amount:0.09 p.primary) )
+      ( p.on_primary, vgrad ~top:0.08 ~bottom:0.05 p.primary,
+        Some (Color.darken ~amount:0.3 p.primary),
+        vgrad ~top:0.13 ~bottom:0.02 (Color.lighten ~amount:0.03 p.primary) )
     | Secondary ->
-      ( p.text, solid p.surface_alt, Some p.border,
-        solid (Color.lighten ~amount:0.05 p.surface_alt) )
+      ( p.text, vgrad ~top:0.05 ~bottom:0.06 p.surface_alt, Some p.border,
+        vgrad ~top:0.09 ~bottom:0.03 p.surface_alt )
     | Ghost ->
       let c = role_color t color in
       (c, solid ~alpha:0 (0, 0, 0), None, solid ~alpha:38 c)
     | Danger ->
-      ( (255, 255, 255), solid p.danger, None,
-        solid (Color.lighten ~amount:0.09 p.danger) )
+      ( (255, 255, 255), vgrad ~top:0.08 ~bottom:0.05 p.danger,
+        Some (Color.darken ~amount:0.3 p.danger),
+        vgrad ~top:0.13 ~bottom:0.02 p.danger )
     | Success ->
-      ( (255, 255, 255), solid p.success, None,
-        solid (Color.lighten ~amount:0.09 p.success) )
+      ( (255, 255, 255), vgrad ~top:0.08 ~bottom:0.05 p.success,
+        Some (Color.darken ~amount:0.3 p.success),
+        vgrad ~top:0.13 ~bottom:0.02 p.success )
   in
   let lbl =
     backend_label ~size:fs ~fg:(rgba fg) text t
@@ -215,16 +231,20 @@ let check ?(state = false) ?(on_toggle = ignore) ?(color = Text) t text =
 
 type input = { layout : layout; text : unit -> string }
 
-let input ?(width = 260) ?(height = 40) ?prompt t () =
+let input ?(width = 260) ?(height = 42) ?prompt t () =
   T.apply t;
   let p = t.T.palette in
   let w = Widget.text_input ?prompt ~size:t.T.font_size () in
   let bg =
     Layout.style_bg
-      (pill_background ~radius:t.T.radius ~border:(`Color p.border)
+      (pill_background ~radius:t.T.radius
+         ~border:(`Color (Color.lighten ~amount:0.04 p.border))
          p.surface_alt)
   in
-  { layout = Layout.resident ~w:width ~h:height ~background:bg w;
+  let hmargin = 12 in
+  let vmargin = max 4 ((height - 30) / 2) in
+  let inner = Layout.resident ~w:(width - 2 * hmargin) w in
+  { layout = Layout.flat ~hmargin ~vmargin ~background:bg [ inner ];
     text = (fun () -> Text_input.text (Widget.get_text_input w)) }
 
 (* {2 Progress bar} *)
@@ -243,7 +263,9 @@ let progress ?(width = 220) ?(height = 8) ?track ?(fill = (Primary : role)) t
     percent =
   T.apply t;
   let p = t.T.palette in
-  let track = match track with Some c -> c | None -> p.surface_alt in
+  let track =
+    match track with Some c -> c | None -> Color.darken ~amount:0.12 p.surface_alt
+  in
   let fill = role_color t fill in
   let w = Widget.sdl_area ~w:width ~h:height () in
   let area = Widget.get_sdl_area w in
@@ -256,6 +278,12 @@ let progress ?(width = 220) ?(height = 8) ?track ?(fill = (Primary : role)) t
     paint_pill area ~x0:0 ~x1:w ~y0 ~y1:(y0 + hh) ~color:(rgba track);
     let fw = max (Theme.scale_int height) (int_of_float (float w *. !percent)) in
     paint_pill area ~x0:0 ~x1:fw ~y0 ~y1:(y0 + hh) ~color:(rgba fill);
+    let r = hh / 2 in
+    if fw > 2 * r && hh >= 6 then
+      Sdl_area.fill_rectangle area
+        ~color:(rgba ~alpha:40 (255, 255, 255))
+        ~w:(fw - 2 * r) ~h:(max 1 (hh / 4))
+        (r, y0 + (r / 2) + 1);
     Sdl_area.update area
   in
   let set v = percent := clamp01 v; Sync.push paint in
@@ -288,11 +316,14 @@ let slider ?(min = 0) ?(max = 100) ?value ?(width = 220) ?(on_change = ignore) t
     let kx = pad + int_of_float (float (w - 2 * pad) *. frac) in
     (* track *)
     paint_pill area ~x0:pad ~x1:(w - pad) ~y0:(cy - track_h / 2)
-      ~y1:(cy + track_h / 2) ~color:(rgba p.surface_alt);
+      ~y1:(cy + track_h / 2)
+      ~color:(rgba (Color.darken ~amount:0.1 p.surface_alt));
     (* filled part *)
     paint_pill area ~x0:pad ~x1:(Stdlib.max (pad + track_h) kx) ~y0:(cy - track_h / 2)
       ~y1:(cy + track_h / 2) ~color:(rgba p.primary);
     (* knob *)
+    Sdl_area.fill_circle area ~color:(rgba ~alpha:60 (0, 0, 0))
+      ~radius:(knob_r + 1) (kx, cy + 1);
     Sdl_area.fill_circle area ~color:(rgba p.surface) ~radius:knob_r (kx, cy);
     Sdl_area.draw_circle area ~thick:2 ~radius:(knob_r - 1)
       ~color:(rgba p.primary) (kx, cy);
@@ -334,14 +365,21 @@ let slider ?(min = 0) ?(max = 100) ?value ?(width = 220) ?(on_change = ignore) t
 
 (* {2 Window} *)
 
-let run ?(title = "Booper") ?(exit_on_escape = true) ?(width = 0) ?(height = 0) t
-    content =
+let run ?(title = "Booper") ?(exit_on_escape = true) ?(width = 0) ?(height = 0)
+    ?(margin = 24) ?(center = true) t content =
   T.apply t;
   let p = t.T.palette in
+  let align = if center then Some Draw.Center else None in
+  let body = column t ?align ~sep:0 ~margins:margin [ content ] in
   let house =
-    Layout.tower ~name:"booper" ~resize:Layout.Resize.Linear
-      ~background:(Layout.opaque_bg p.bg)
-      [ content ]
+    Layout.tower ~name:"booper" ?align ~resize:Layout.Resize.Linear
+      ~background:
+        (Layout.style_bg
+           (Style.of_bg
+              (Style.vgradient
+                 [ Color.opaque p.bg;
+                   Color.opaque (Color.darken ~amount:0.28 p.bg) ])))
+      [ body ]
   in
   let shortcuts =
     if exit_on_escape then Main.shortcuts_of_list [ Main.exit_on_escape ]

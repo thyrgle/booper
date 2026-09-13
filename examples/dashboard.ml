@@ -10,7 +10,7 @@ let palette_name =
 let theme = Booper.Theme.create ~radius:14 ~font_size:15 (Booper.Theme.preset palette_name)
 
 let stat_card icon value caption accent =
-  Booper.card ~padding:20 ~sep:8 theme
+  Booper.card ~padding:22 ~sep:10 theme
     [
       Booper.row theme ~sep:8
         [
@@ -21,7 +21,7 @@ let stat_card icon value caption accent =
     ]
 
 let progress_row caption percent color =
-  Booper.column theme ~sep:8
+  Booper.column theme ~sep:10
     [
       Booper.row theme ~sep:8
         [
@@ -34,21 +34,25 @@ let progress_row caption percent color =
 
 let ui =
   let open Booper in
-  column theme ~sep:20
+  column theme ~sep:28 ~align:Bogue.Draw.Center
     [
-      row theme ~sep:8
+      column theme ~sep:4 ~align:Bogue.Draw.Center
         [
-          icon theme ~color:Primary "line-chart";
-          title theme "Dashboard";
-          spacer ~w:40 ~h:1 ();
-          label theme ~color:Muted ("palette: " ^ palette_name);
+          row theme ~sep:10 ~align:Bogue.Draw.Center
+            [
+              icon theme ~size:26 ~color:Primary "line-chart";
+              title theme "Dashboard";
+            ];
+          label theme ~size:Caption ~color:Muted ("palette: " ^ palette_name);
         ];
-      row theme ~sep:16
+      spacer ~w:1 ~h:12 ();
+      row theme ~sep:18
         [
           stat_card "users" "1,284" "Active users" Primary;
           stat_card "thumbs-o-up" "98.2%" "Satisfaction" Success;
           stat_card "exclamation-triangle" "3" "Open alerts" Warning;
         ];
+      spacer ~w:1 ~h:12 ();
       card theme
         [
           heading theme "Weekly goals";
@@ -57,7 +61,7 @@ let ui =
           progress_row "Code review" 0.45 Primary;
           progress_row "Bug fixes" 0.90 Success;
         ];
-      row theme ~sep:12
+      row theme ~sep:14
         [
           button theme ~on_click:(fun () -> print_endline "new report!")
             "New report";

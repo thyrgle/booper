@@ -33,7 +33,7 @@ type t = {
   (* (regular, semibold) font paths; "" means keep Bogue's default font. *)
 }
 
-let create ?(radius = 10) ?(spacing = 10) ?(font_size = 15)
+let create ?(radius = 10) ?(spacing = 14) ?(font_size = 15)
     ?(font = "") ?(font_semibold = "") ?(width = 0) ?(height = 0) palette =
   let fonts =
     lazy

@@ -15,12 +15,12 @@ let update_counter () =
   Bogue.Update.push w
 
 let ui =
-  Booper.column theme ~sep:18
+  Booper.column theme ~sep:20 ~align:Bogue.Draw.Center
     [
       Booper.title theme "Hello, Booper";
       Booper.label theme ~size:Booper.Body ~color:Booper.Muted
         "A modern look for OCaml's Bogue GUI library.";
-      Booper.row theme ~sep:12
+      Booper.row theme ~sep:14
         [
           Booper.button theme ~on_click:(fun () ->
               incr count;
@@ -28,7 +28,7 @@ let ui =
             "Click me";
           !counter;
         ];
-      Booper.row theme ~sep:12
+      Booper.row theme ~sep:14
         [
           Booper.button theme ~variant:Booper.Secondary ~small:true
             ~on_click:(fun () -> print_endline "secondary") "Secondary";
