@@ -84,14 +84,16 @@ let clamp_range lo hi v = max lo (min hi v)
 
 (* {2 Layout helpers} *)
 
-let row ?(sep = -1) ?(margins = 0) ?(align = Draw.Center) ?background ?shadow t
+let row ?(sep = -1) ?margins ?(align = Draw.Center) ?background ?shadow t
     rooms =
   let sep = if sep < 0 then t.T.spacing else sep in
-  Layout.flat ~sep ~margins ~align ?background ?shadow rooms
+  Layout.flat ~sep ?margins ~hmargin:0 ~vmargin:0 ~align ?background ?shadow
+    rooms
 
-let column ?(sep = -1) ?(margins = 0) ?align ?background ?shadow t rooms =
+let column ?(sep = -1) ?margins ?align ?background ?shadow t rooms =
   let sep = if sep < 0 then t.T.spacing else sep in
-  Layout.tower ~sep ~margins ?align ?background ?shadow rooms
+  Layout.tower ~sep ?margins ~hmargin:0 ~vmargin:0 ?align ?background ?shadow
+    rooms
 
 let spacer ?(w = 10) ?(h = 10) ?background () = Layout.empty ~w ~h ?background ()
 let hfill () = Space.hfill ()
@@ -145,8 +147,8 @@ let card ?(padding = 22) ?(sep = 14) ?(shadow = true) ?(radius = 14)
       Some (Style.mk_shadow ~offset:(0, 4) ~size:3 ~width:radius ~radius ())
     else None
   in
-  Layout.tower ~sep ~margins:padding ~background:(Layout.style_bg style) ?shadow
-    rooms
+  Layout.tower ~sep ~hmargin:padding ~vmargin:padding
+    ~background:(Layout.style_bg style) ?shadow rooms
 
 (* {2 Button} *)
 

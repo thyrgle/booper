@@ -90,6 +90,24 @@ let progress_row theme caption percent color =
 
 let dash_ui theme =
   let open Booper in
+  let goals =
+    card theme
+      [
+        heading theme "Weekly goals";
+        divider ~width:520 theme;
+        progress_row theme "Deploys" 0.72 Secondary;
+        progress_row theme "Code review" 0.45 Primary;
+        progress_row theme "Bug fixes" 0.90 Success;
+      ]
+  in
+  let stat_sep = 18 in
+  let stat_width = (Bogue.Layout.width goals - (2 * stat_sep)) / 3 in
+  let stat_cards =
+    [ stat_card theme "users" "1,284" "Active users" Primary;
+      stat_card theme "thumbs-o-up" "98.2%" "Satisfaction" Success;
+      stat_card theme "exclamation-triangle" "3" "Open alerts" Warning ]
+  in
+  List.iter (fun c -> Bogue.Layout.set_width c stat_width) stat_cards;
   column theme ~sep:28 ~align:Bogue.Draw.Center
     [
       column theme ~sep:4 ~align:Bogue.Draw.Center
@@ -102,21 +120,9 @@ let dash_ui theme =
           label theme ~size:Caption ~color:Muted ("palette: " ^ palette_name);
         ];
       spacer ~w:1 ~h:12 ();
-      row theme ~sep:18
-        [
-          stat_card theme "users" "1,284" "Active users" Primary;
-          stat_card theme "thumbs-o-up" "98.2%" "Satisfaction" Success;
-          stat_card theme "exclamation-triangle" "3" "Open alerts" Warning;
-        ];
+      row theme ~sep:stat_sep stat_cards;
       spacer ~w:1 ~h:12 ();
-      card theme
-        [
-          heading theme "Weekly goals";
-          divider ~width:520 theme;
-          progress_row theme "Deploys" 0.72 Secondary;
-          progress_row theme "Code review" 0.45 Primary;
-          progress_row theme "Bug fixes" 0.90 Success;
-        ];
+      goals;
       row theme ~sep:14
         [
           button theme ~on_click:(fun () -> print_endline "new report!")
