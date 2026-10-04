@@ -5,12 +5,10 @@ let theme = Booper.Theme.create ~radius:10 Booper.Theme.dark
 let count = ref 0
 
 (* The label whose text is updated on every click. *)
-let counter =
-  let l = Booper.label theme ~color:Booper.Primary "clicked 0 times" in
-  ref l
+let counter = Booper.label theme ~color:Booper.Primary "clicked 0 times"
 
 let update_counter () =
-  let w = Booper.L.widget !counter in
+  let w = Booper.L.widget counter in
   Bogue.Widget.set_text w (Printf.sprintf "clicked %d times" !count);
   Bogue.Update.push w
 
@@ -26,7 +24,7 @@ let ui =
               incr count;
               update_counter ())
             "Click me";
-          !counter;
+          counter;
         ];
       Booper.row theme ~sep:14
         [
