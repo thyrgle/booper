@@ -13,25 +13,6 @@ type rgba = int * int * int * int
 
 let clamp x = min 255 (max 0 x)
 
-let of_hex s =
-  let hex subs = int_of_string ("0x" ^ subs) in
-  let s =
-    if String.length s > 0 && s.[0] = '#'
-    then String.sub s 1 (String.length s - 1)
-    else s
-  in
-  match String.length s with
-  | 6 ->
-    ( hex (String.sub s 0 2),
-      hex (String.sub s 2 2),
-      hex (String.sub s 4 2) )
-  | 3 ->
-    let double c = String.make 2 c in
-    ( hex (double s.[0]),
-      hex (double s.[1]),
-      hex (double s.[2]) )
-  | _ -> invalid_arg "Booper.Color.of_hex: expect #rgb or #rrggbb"
-
 let channels (r, g, b) = (clamp r, clamp g, clamp b)
 
 let to_rgba ?(alpha = 255) c =

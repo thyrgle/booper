@@ -59,60 +59,60 @@ let create ?(radius = 10) ?(spacing = 14) ?(font_size = 15)
 (* {2 Presets} *)
 
 let dark =
-  { bg = Color.of_hex "#1e2127"; surface = Color.of_hex "#2c313a";
-    surface_alt = Color.of_hex "#3a3f4b"; border = Color.of_hex "#3e4451";
-    text = Color.of_hex "#d7dae0"; text_muted = Color.of_hex "#9da5b4";
-    primary = Color.of_hex "#61afef"; on_primary = Color.of_hex "#ffffff";
-    secondary = Color.of_hex "#98c379"; success = Color.of_hex "#98c379";
-    warning = Color.of_hex "#e5c07b"; danger = Color.of_hex "#e06c75" }
+  { bg = Bogue.RGB.find_color "#1e2127"; surface = Bogue.RGB.find_color "#2c313a";
+    surface_alt = Bogue.RGB.find_color "#3a3f4b"; border = Bogue.RGB.find_color "#3e4451";
+    text = Bogue.RGB.find_color "#d7dae0"; text_muted = Bogue.RGB.find_color "#9da5b4";
+    primary = Bogue.RGB.find_color "#61afef"; on_primary = Bogue.RGB.find_color "#ffffff";
+    secondary = Bogue.RGB.find_color "#98c379"; success = Bogue.RGB.find_color "#98c379";
+    warning = Bogue.RGB.find_color "#e5c07b"; danger = Bogue.RGB.find_color "#e06c75" }
 
 let light =
-  { bg = Color.of_hex "#f8fafc"; surface = Color.of_hex "#ffffff";
-    surface_alt = Color.of_hex "#eef2f7"; border = Color.of_hex "#dbe2ea";
-    text = Color.of_hex "#0f172a"; text_muted = Color.of_hex "#64748b";
-    primary = Color.of_hex "#3b82f6"; on_primary = Color.of_hex "#ffffff";
-    secondary = Color.of_hex "#10b981"; success = Color.of_hex "#22c55e";
-    warning = Color.of_hex "#f59e0b"; danger = Color.of_hex "#ef4444" }
+  { bg = Bogue.RGB.find_color "#f8fafc"; surface = Bogue.RGB.find_color "#ffffff";
+    surface_alt = Bogue.RGB.find_color "#eef2f7"; border = Bogue.RGB.find_color "#dbe2ea";
+    text = Bogue.RGB.find_color "#0f172a"; text_muted = Bogue.RGB.find_color "#64748b";
+    primary = Bogue.RGB.find_color "#3b82f6"; on_primary = Bogue.RGB.find_color "#ffffff";
+    secondary = Bogue.RGB.find_color "#10b981"; success = Bogue.RGB.find_color "#22c55e";
+    warning = Bogue.RGB.find_color "#f59e0b"; danger = Bogue.RGB.find_color "#ef4444" }
 
 let nord =
-  { bg = Color.of_hex "#2e3440"; surface = Color.of_hex "#3b4252";
-    surface_alt = Color.of_hex "#434c5e"; border = Color.of_hex "#4c566a";
-    text = Color.of_hex "#eceff4"; text_muted = Color.of_hex "#d8dee9";
-    primary = Color.of_hex "#88c0d0"; on_primary = Color.of_hex "#2e3440";
-    secondary = Color.of_hex "#81a1c1"; success = Color.of_hex "#a3be8c";
-    warning = Color.of_hex "#ebcb8b"; danger = Color.of_hex "#bf616a" }
+  { bg = Bogue.RGB.find_color "#2e3440"; surface = Bogue.RGB.find_color "#3b4252";
+    surface_alt = Bogue.RGB.find_color "#434c5e"; border = Bogue.RGB.find_color "#4c566a";
+    text = Bogue.RGB.find_color "#eceff4"; text_muted = Bogue.RGB.find_color "#d8dee9";
+    primary = Bogue.RGB.find_color "#88c0d0"; on_primary = Bogue.RGB.find_color "#2e3440";
+    secondary = Bogue.RGB.find_color "#81a1c1"; success = Bogue.RGB.find_color "#a3be8c";
+    warning = Bogue.RGB.find_color "#ebcb8b"; danger = Bogue.RGB.find_color "#bf616a" }
 
 let dracula =
-  { bg = Color.of_hex "#282a36"; surface = Color.of_hex "#31334a";
-    surface_alt = Color.of_hex "#44475a"; border = Color.of_hex "#44475a";
-    text = Color.of_hex "#f8f8f2"; text_muted = Color.of_hex "#a9b0c9";
-    primary = Color.of_hex "#bd93f9"; on_primary = Color.of_hex "#282a36";
-    secondary = Color.of_hex "#ff79c6"; success = Color.of_hex "#50fa7b";
-    warning = Color.of_hex "#f1fa8c"; danger = Color.of_hex "#ff5555" }
+  { bg = Bogue.RGB.find_color "#282a36"; surface = Bogue.RGB.find_color "#31334a";
+    surface_alt = Bogue.RGB.find_color "#44475a"; border = Bogue.RGB.find_color "#44475a";
+    text = Bogue.RGB.find_color "#f8f8f2"; text_muted = Bogue.RGB.find_color "#a9b0c9";
+    primary = Bogue.RGB.find_color "#bd93f9"; on_primary = Bogue.RGB.find_color "#282a36";
+    secondary = Bogue.RGB.find_color "#ff79c6"; success = Bogue.RGB.find_color "#50fa7b";
+    warning = Bogue.RGB.find_color "#f1fa8c"; danger = Bogue.RGB.find_color "#ff5555" }
 
 let solarized =
-  { bg = Color.of_hex "#002b36"; surface = Color.of_hex "#073642";
-    surface_alt = Color.of_hex "#0d4552"; border = Color.of_hex "#12586a";
-    text = Color.of_hex "#93a1a1"; text_muted = Color.of_hex "#657b83";
-    primary = Color.of_hex "#268bd2"; on_primary = Color.of_hex "#fdf6e3";
-    secondary = Color.of_hex "#2aa198"; success = Color.of_hex "#859900";
-    warning = Color.of_hex "#b58900"; danger = Color.of_hex "#dc322f" }
+  { bg = Bogue.RGB.find_color "#002b36"; surface = Bogue.RGB.find_color "#073642";
+    surface_alt = Bogue.RGB.find_color "#0d4552"; border = Bogue.RGB.find_color "#12586a";
+    text = Bogue.RGB.find_color "#93a1a1"; text_muted = Bogue.RGB.find_color "#657b83";
+    primary = Bogue.RGB.find_color "#268bd2"; on_primary = Bogue.RGB.find_color "#fdf6e3";
+    secondary = Bogue.RGB.find_color "#2aa198"; success = Bogue.RGB.find_color "#859900";
+    warning = Bogue.RGB.find_color "#b58900"; danger = Bogue.RGB.find_color "#dc322f" }
 
 let gruvbox =
-  { bg = Color.of_hex "#282828"; surface = Color.of_hex "#3c3836";
-    surface_alt = Color.of_hex "#504945"; border = Color.of_hex "#5a524c";
-    text = Color.of_hex "#ebdbb2"; text_muted = Color.of_hex "#a89984";
-    primary = Color.of_hex "#fe8019"; on_primary = Color.of_hex "#282828";
-    secondary = Color.of_hex "#83a598"; success = Color.of_hex "#b8bb26";
-    warning = Color.of_hex "#fabd2f"; danger = Color.of_hex "#fb4934" }
+  { bg = Bogue.RGB.find_color "#282828"; surface = Bogue.RGB.find_color "#3c3836";
+    surface_alt = Bogue.RGB.find_color "#504945"; border = Bogue.RGB.find_color "#5a524c";
+    text = Bogue.RGB.find_color "#ebdbb2"; text_muted = Bogue.RGB.find_color "#a89984";
+    primary = Bogue.RGB.find_color "#fe8019"; on_primary = Bogue.RGB.find_color "#282828";
+    secondary = Bogue.RGB.find_color "#83a598"; success = Bogue.RGB.find_color "#b8bb26";
+    warning = Bogue.RGB.find_color "#fabd2f"; danger = Bogue.RGB.find_color "#fb4934" }
 
 let mocha =
-  { bg = Color.of_hex "#1e1e2e"; surface = Color.of_hex "#28283d";
-    surface_alt = Color.of_hex "#3d3d55"; border = Color.of_hex "#48485e";
-    text = Color.of_hex "#cdd6f4"; text_muted = Color.of_hex "#a6adc8";
-    primary = Color.of_hex "#89b4fa"; on_primary = Color.of_hex "#1e1e2e";
-    secondary = Color.of_hex "#f5c2e7"; success = Color.of_hex "#a6e3a1";
-    warning = Color.of_hex "#f9e2af"; danger = Color.of_hex "#f38ba8" }
+  { bg = Bogue.RGB.find_color "#1e1e2e"; surface = Bogue.RGB.find_color "#28283d";
+    surface_alt = Bogue.RGB.find_color "#3d3d55"; border = Bogue.RGB.find_color "#48485e";
+    text = Bogue.RGB.find_color "#cdd6f4"; text_muted = Bogue.RGB.find_color "#a6adc8";
+    primary = Bogue.RGB.find_color "#89b4fa"; on_primary = Bogue.RGB.find_color "#1e1e2e";
+    secondary = Bogue.RGB.find_color "#f5c2e7"; success = Bogue.RGB.find_color "#a6e3a1";
+    warning = Bogue.RGB.find_color "#f9e2af"; danger = Bogue.RGB.find_color "#f38ba8" }
 
 let presets =
   [ "dark", dark; "light", light; "nord", nord; "dracula", dracula;
